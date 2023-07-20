@@ -1,0 +1,11 @@
+.card-img{
+    max-height: 300px;
+}
+.card{
+    margin-top: 20px;
+}
+.movie-list{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}

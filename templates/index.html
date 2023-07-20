@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1 style="margin-top: 2%;">Popular Movies Today</h1>
+    <div class="movie-list">
+        
+        </div>
+    </div>
+
+
+      <script>
+
+        const movie_list = document.querySelector('.movie-list');
+        const IMG_URL = "https://image.tmdb.org/t/p/w500/";
+        
+        function getPopularMovies(){
+            const options = {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: 'Bearer {{ACCESS_TOKEN}}'
+                }
+            };
+
+            fetch('https://api.themoviedb.org/3/movie/popular', options)
+            .then(response => response.json())
+            .then(response => displayMovies(response))
+            .catch(err => console.error(err));
+        }
+
+        getPopularMovies();
+
+        function displayMovies(data){
+
+            results = data.results;
+            let str = ""
+
+            for (let movie of results){
+                str += 
+                `   <div class="card" style="width: 18rem;">
+                        <img class="card-img-top card-img" src="${IMG_URL+movie.poster_path}" alt="Card image cap">
+                        <div class="card-body">
+                        <h5 class="card-title">${movie.original_title}</h5>
+                        <p class="card-text">${movie.release_date}</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>`
+
+            }
+            
+
+
+
+            movie_list.innerHTML = str;
+        }
+
+
+      </script>
+
+{% endblock %}
