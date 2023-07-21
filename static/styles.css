@@ -9,3 +9,17 @@
     justify-content: space-between;
     flex-wrap: wrap;
 }
+
+.button{
+    background-color: inherit;
+    padding-left: 5%;
+    padding-right: 5%;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+}
+
+.button:hover{
+    background-color: aquamarine;
+}
+

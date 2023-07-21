@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<style>
+
+    
+    .card-title{
+    margin-top: 10%;
+}
+</style>
+
+
+<div class="movie-details">
+    
+</div>
+
+
+
+<script>
+
+    const movie_details = document.querySelector('.movie-details');
+    const IMG_URL = "https://image.tmdb.org/t/p/w500/";
+
+    function getMovieDetails(){
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: 'Bearer {{ACCESS_TOKEN}}'
+            }
+        };
+
+        fetch('https://api.themoviedb.org/3/movie/{{movie_id}}', options)
+        .then(response => response.json())
+        .then(response => displayMovieDetails(response))
+        .catch(err => console.error(err));
+    }
+
+   
+    function displayMovieDetails(data){
+        console.log(data);
+
+        const arr = [];
+        data.genres.forEach(element => {
+            arr.push(element.name)
+        });
+
+        console.log(arr)
+
+        const genres = arr.join(", ");
+        str =
+        `
+        <div class="card mb-3" style="max-width: inherit; min-height: inherit;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="${IMG_URL+data.poster_path}" class="img-fluid rounded-start" alt="" style="padding: 10%;">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                    <h3 class="card-title">${data.original_title}</h3>
+                    <p class="card-text">${data.tagline}</p>
+                    <p class="card-text"><strong>Score: </strong> <i class="fa-solid fa-star" style="color: #d7d11d;"></i>  ${data.vote_average}</p>
+                    <p class="card-text"><strong>Genre: </strong>${genres}</p>
+                    <p class="card-text"><strong>Overview: </strong> ${data.overview}</p>
+                    <a class="btn btn-primary" href="{% url 'index' %}">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        `
+
+        movie_details.innerHTML = str;
+    }
+
+    getMovieDetails()
+
+</script>
+{% endblock %}

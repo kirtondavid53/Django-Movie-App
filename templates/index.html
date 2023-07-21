@@ -7,7 +7,7 @@
         
         </div>
     </div>
-
+<button><i class="fa-regular fa-star"></i></button>
 
       <script>
 
@@ -28,6 +28,7 @@
             .then(response => displayMovies(response))
             .catch(err => console.error(err));
         }
+        
 
         getPopularMovies();
 
@@ -39,11 +40,18 @@
             for (let movie of results){
                 str += 
                 `   <div class="card" style="width: 18rem;">
+                        <div class="image">
                         <img class="card-img-top card-img" src="${IMG_URL+movie.poster_path}" alt="Card image cap">
+                        </div>
                         <div class="card-body">
+                            <p> 
+                                <i class="fa-solid fa-star" style="color: #d7d11d;"></i> 
+                                ${movie.vote_average}  
+                                <button class="button"><i class="fa-regular fa-star" style="color: #155fe0;"></i></button> 
+                            </p>
                         <h5 class="card-title">${movie.original_title}</h5>
                         <p class="card-text">${movie.release_date}</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <a class="btn btn-primary" href="/movie_details/${movie.id}">Details</a>
                         </div>
                     </div>`
 
