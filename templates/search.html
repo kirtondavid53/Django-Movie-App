@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <h1 style="margin-top: 2%;">Popular Movies Today</h1>
+    <h3 style="margin-top: 2%;">You searched: '{{search}}'</h3>
     <div class="movie-list">
         
         </div>
@@ -18,11 +18,11 @@
                 method: 'GET',
                 headers: {
                     accept: 'application/json',
-                    Authorization: 'Bearer {{ACCESS_TOKEN}}'
+                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMjY4MGExZDU2OTNlY2YzN2RkNDcwNDYzZWI3YzliYiIsInN1YiI6IjY0Yjk2ZGE5ZWZkM2MyMDBkZmRmMzZiOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.oQ1fqAJ8CBH-VRJk4M_ollTAQO94l6NYzEotm08hCrQ'
                 }
             };
 
-            fetch('https://api.themoviedb.org/3/movie/popular', options)
+            fetch('https://api.themoviedb.org/3/search/movie?query={{search}}', options)
             .then(response => response.json())
             .then(response => displayMovies(response))
             .catch(err => console.error(err));

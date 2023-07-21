@@ -7,8 +7,9 @@
 
     
     .card-title{
-    margin-top: 10%;
-}
+        margin-top: 5%;
+    }
+
 </style>
 
 
@@ -43,13 +44,26 @@
         console.log(data);
 
         const arr = [];
+        const arr2 = [];
+        const arr3 = [];
         data.genres.forEach(element => {
             arr.push(element.name)
+        });
+
+        data.production_countries.forEach(element => {
+            arr2.push(element.name)
+        });
+
+        data.production_companies.forEach(element => {
+            arr3.push(element.name)
         });
 
         console.log(arr)
 
         const genres = arr.join(", ");
+        const production_countries  = arr2.join(", ");
+        const production_companies = arr3.join(", ");
+
         str =
         `
         <div class="card mb-3" style="max-width: inherit; min-height: inherit;">
@@ -63,7 +77,10 @@
                     <p class="card-text">${data.tagline}</p>
                     <p class="card-text"><strong>Score: </strong> <i class="fa-solid fa-star" style="color: #d7d11d;"></i>  ${data.vote_average}</p>
                     <p class="card-text"><strong>Genre: </strong>${genres}</p>
+                    <p class="card-text"><strong>Companies: </strong>${production_companies || 'Unknown'}</p>
+                    <p class="card-text"><strong>Countries: </strong>${production_countries || 'Unknown'}</p>
                     <p class="card-text"><strong>Overview: </strong> ${data.overview}</p>
+                    <p class="card-text"><strong>Release date: </strong> ${data.release_date}</p>
                     <a class="btn btn-primary" href="{% url 'index' %}">Back</a>
                     </div>
                 </div>
