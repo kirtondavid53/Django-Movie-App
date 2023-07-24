@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <style>
+        @media screen and (max-width:540px) {
+            
+            .movie-list{  
+                justify-content: center;
+            }
+        
+        }
+    </style>
+
+
+    <h1 style="margin-top: 2%;">{{request.user}}'s Favourite Movies</h1>
+
+    <div class="movie-list">
+
+        
+    </div>
+
+      <script>
+
+        const movie_list = document.querySelector('.movie-list');
+        const IMG_URL = "https://image.tmdb.org/t/p/w500/";
+        
+        function getPopularMovies(data){
+            const favourites = data.result;
+            const options = {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: 'Bearer {{ACCESS_TOKEN}}'
+                }
+            };
+
+            for (let favourite of favourites){
+                fetch(`https://api.themoviedb.org/3/movie/${favourite.movie_id}`, options)
+                .then(response => response.json())
+                .then(response => displayMovies(response))
+                .catch(err => console.error(err));
+            }
+
+            
+        }
+        
+
+        //getPopularMovies();
+
+
+        // display the favourite movies of logged in user
+        function displayMovies(movie){
+
+            let str = 
+
+                `   <div class="card" style="width: 18rem;">
+                        <div class="image">
+                        <img class="card-img-top card-img" src="${IMG_URL+movie.poster_path}" alt="Card image cap">
+                        </div>
+                        <div class="card-body">
+                            <p> 
+                                <i class="fa-solid fa-star" style="color: #d7d11d;"></i> 
+                                ${movie.vote_average}                            
+                            </p>
+                        <h5 class="card-title">${movie.original_title}</h5>
+                        <p class="card-text">${movie.release_date}</p>
+                        <a class="btn btn-primary" style="margin-right: 2%;" href="/movie_details/${movie.id}">Details</a>
+                        <a class="btn btn-danger" href="/del_favourite/${movie.id}">Delete</a>
+                        </div>
+                    </div>`
+
+            
+            
+            movie_list.innerHTML += str;
+        }
+
+        async function getFavourites(){
+            try{
+                response = await fetch("{% url 'get_favor' %}")
+                result = await response.json()
+                getPopularMovies(result);
+            }
+            catch(error){
+                console.log(`Error: ${error}`);
+            }
+
+        }
+
+        getFavourites()
+
+      </script>
+
+{% endblock %}

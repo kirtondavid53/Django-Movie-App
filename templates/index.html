@@ -14,8 +14,8 @@
 
     <h1 style="margin-top: 2%;">Popular Movies Today</h1>
     <div class="movie-list">
+
         
-        </div>
     </div>
 
       <script>
@@ -55,8 +55,10 @@
                         <div class="card-body">
                             <p> 
                                 <i class="fa-solid fa-star" style="color: #d7d11d;"></i> 
-                                ${movie.vote_average}  
-                                <button class="button"><i class="fa-regular fa-heart" style="color: #155fe0;"></i></button> 
+                                ${movie.vote_average} 
+                                {% if request.user.is_authenticated %}                                 
+                                <button type="submit" class="button" onClick="add_Favourite('${movie.id},${movie.original_title}'); return false;" ><i class="fa-regular fa-heart" style="color: #155fe0;"></i></button>   
+                                {% endif %}                             
                             </p>
                         <h5 class="card-title">${movie.original_title}</h5>
                         <p class="card-text">${movie.release_date}</p>
@@ -66,10 +68,45 @@
 
             }
             
-
-
-
             movie_list.innerHTML = str;
+        }
+
+        async function add_Favourite(string) {
+
+            const arr = string.split(',');
+
+            const [movie_id, movie_name] = arr;
+
+            data = {
+                movie_id : movie_id,
+                movie_name : movie_name
+            }
+            try {
+                const response = await fetch("{% url 'add_favourite' %}", {
+                method: "POST", // or 'PUT'
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                
+                body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+                const {isExit, message} = result;
+                displayAlert(isExit, message)
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+
+        function displayAlert(isExit, message){
+            if(isExit){
+                swal("Good Job", message, "success")
+            }
+            else{
+                swal("Good Job", message, "info")
+            }
+
         }
 
 

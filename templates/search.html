@@ -28,7 +28,7 @@
                 method: 'GET',
                 headers: {
                     accept: 'application/json',
-                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkMjY4MGExZDU2OTNlY2YzN2RkNDcwNDYzZWI3YzliYiIsInN1YiI6IjY0Yjk2ZGE5ZWZkM2MyMDBkZmRmMzZiOCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.oQ1fqAJ8CBH-VRJk4M_ollTAQO94l6NYzEotm08hCrQ'
+                    Authorization: 'Bearer {{ACCESS_TOKEN}}'
                 }
             };
 
@@ -50,13 +50,15 @@
                 str += 
                 `   <div class="card" style="width: 18rem;">
                         <div class="image">
-                        <img class="card-img-top card-img" src="${IMG_URL+movie.poster_path}" alt="Card image cap">
+                        <img class="card-img-top card-img" src="${IMG_URL+movie.poster_path}" alt="Movie Poster">
                         </div>
                         <div class="card-body">
                             <p> 
                                 <i class="fa-solid fa-star" style="color: #d7d11d;"></i> 
                                 ${movie.vote_average}  
-                                <button class="button"><i class="fa-regular fa-heart" style="color: #155fe0;"></i></button> 
+                                {% if request.user.is_authenticated %}                                 
+                                    <button type="submit" class="button" onClick="add_Favourite('${movie.id},${movie.original_title}'); return false;" ><i class="fa-regular fa-heart" style="color: #155fe0;"></i></button>   
+                                {% endif %}  
                             </p>
                         <h5 class="card-title">${movie.original_title}</h5>
                         <p class="card-text">${movie.release_date}</p>
@@ -71,6 +73,44 @@
 
             movie_list.innerHTML = str;
         }
+
+        async function add_Favourite(string) {
+
+        const arr = string.split(',');
+
+        const [movie_id, movie_name] = arr;
+
+        data = {
+            movie_id : movie_id,
+            movie_name : movie_name
+        }
+        try {
+            const response = await fetch("{% url 'add_favourite' %}", {
+            method: "POST", // or 'PUT'
+            headers: {
+                "Content-Type": "application/json",
+            },
+            
+            body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            const {isExit, message} = result;
+            displayAlert(isExit, message)
+        } catch (error) {
+            console.error("Error:", error);
+        }
+        }
+
+        function displayAlert(isExit, message){
+        if(isExit){
+            swal("Good Job", message, "success")
+        }
+        else{
+            swal("Good Job", message, "info")
+        }
+
+}
 
 
       </script>
